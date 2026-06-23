@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cabij Studio Website
 
-## Getting Started
+Production website for Cabij Studio, a creative production studio serving private chefs, restaurants, retreats, and yoga and wellness brands.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 App Router
+- React 19 and TypeScript
+- Tailwind CSS 4
+- Framer Motion
+
+## Local setup
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` to `.env.local` and replace the placeholder values.
 
-## Learn More
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Canonical production URL used by metadata, robots, and sitemap |
+| `NEXT_PUBLIC_EMAIL` | Public contact email |
+| `NEXT_PUBLIC_BOOKING_URL` | Calendly or another booking link |
+| `NEXT_PUBLIC_INSTAGRAM_URL` | Full public Instagram profile URL |
+| `ENQUIRY_WEBHOOK_URL` | Server-side endpoint that receives qualified enquiry JSON |
+| `ENQUIRY_WEBHOOK_TOKEN` | Optional bearer token sent to the enquiry webhook |
 
-To learn more about Next.js, take a look at the following resources:
+The enquiry form returns an honest configuration error until `ENQUIRY_WEBHOOK_URL` is set. It never displays a false success state.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Content editing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Primary reusable content lives in:
 
-## Deploy on Vercel
+- `src/data/industries.ts` — industry-page copy and imagery
+- `src/data/portfolio.ts` — portfolio projects and case-study content
+- `src/data/services.ts` — service descriptions and deliverables
+- `src/data/process.ts` — four-stage studio process
+- `src/data/navigation.ts` — header and footer links
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Images live in `public/images`. Keep the existing paths when replacing assets, or update the matching `imageSrc` value in the data file.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Portfolio labels must remain honest. Use only:
+
+- `Studio Project`
+- `Original Concept`
+- `Creative Study`
+- `Spec Campaign`
+- `Client Work` when the project is genuinely commissioned
+
+## Enquiry webhook
+
+`POST /api/enquiry` validates required fields, email format, consent, and a honeypot field before forwarding the payload to `ENQUIRY_WEBHOOK_URL`.
+
+The receiving endpoint should accept JSON. The forwarded payload includes all form fields plus:
+
+```json
+{
+  "submittedAt": "ISO-8601 timestamp",
+  "source": "cabijstudio.co"
+}
+```
+
+Suitable receivers include an n8n webhook, Make, Zapier, a CRM endpoint, or a custom API.
+
+## Verification
+
+```bash
+npm run lint
+npm run build
+```
+
+Before launch, also verify:
+
+1. Every navigation and portfolio link.
+2. The enquiry webhook using a real test submission.
+3. Booking, Instagram, and email links.
+4. Mobile layouts and keyboard navigation.
+5. Privacy and terms language with legal counsel.
+
+## Deployment
+
+Deploy to any platform supporting Next.js 16. Configure all environment variables in the deployment environment before building.

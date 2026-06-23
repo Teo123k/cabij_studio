@@ -1,26 +1,234 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* =============================================
+   CABIJ STUDIO — Design System (Tailwind v4)
+   ============================================= */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* --- Colors --- */
+  --color-charcoal:        #1a1a1a;
+  --color-charcoal-50:     #f7f7f7;
+  --color-charcoal-100:    #e3e3e3;
+  --color-charcoal-200:    #c8c8c8;
+  --color-charcoal-300:    #a4a4a4;
+  --color-charcoal-400:    #818181;
+  --color-charcoal-500:    #666666;
+  --color-charcoal-600:    #515151;
+  --color-charcoal-700:    #434343;
+  --color-charcoal-800:    #2a2a2a;
+  --color-charcoal-900:    #1a1a1a;
+  --color-charcoal-950:    #0d0d0d;
+
+  --color-cream:           #f5f0e8;
+  --color-cream-50:        #fdfcfa;
+  --color-cream-100:       #faf8f3;
+  --color-cream-200:       #f5f0e8;
+  --color-cream-300:       #e8dece;
+  --color-cream-400:       #d4c4a8;
+  --color-cream-500:       #c0aa82;
+
+  --color-terracotta:      #c4704b;
+  --color-terracotta-50:   #fdf3ee;
+  --color-terracotta-100:  #fbe4d8;
+  --color-terracotta-200:  #f5c6af;
+  --color-terracotta-300:  #efa07d;
+  --color-terracotta-400:  #e07a52;
+  --color-terracotta-500:  #c4704b;
+  --color-terracotta-600:  #b05a38;
+  --color-terracotta-700:  #924630;
+  --color-terracotta-800:  #763a2c;
+  --color-terracotta-900:  #613327;
+
+  --color-olive:           #5c6b4f;
+  --color-olive-500:       #5c6b4f;
+
+  /* --- Fonts --- */
+  --font-serif:  "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-sans:   Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* --- Animation keyframes --- */
+  --animate-fade-up:   fade-up 0.8s ease-out forwards;
+  --animate-fade-in:   fade-in 1s ease-out forwards;
+  --animate-scale-in:  scale-in 0.6s ease-out forwards;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* =============================================
+   BASE STYLES
+   ============================================= */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-charcoal-900);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--color-terracotta) 30%, transparent);
+  color: var(--color-cream);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =============================================
+   UTILITY CLASSES
+   ============================================= */
+
+/* Container helpers */
+.container-content {
+  margin-inline: auto;
+  max-width: 1280px;
+  padding-inline: 1.5rem;
+}
+@media (min-width: 768px) {
+  .container-content { padding-inline: 2.5rem; }
+}
+@media (min-width: 1024px) {
+  .container-content { padding-inline: 4rem; }
+}
+
+.container-narrow {
+  margin-inline: auto;
+  max-width: 800px;
+  padding-inline: 1.5rem;
+}
+@media (min-width: 768px) {
+  .container-narrow { padding-inline: 2.5rem; }
+}
+
+.container-wide {
+  margin-inline: auto;
+  max-width: 1440px;
+  padding-inline: 1.5rem;
+}
+@media (min-width: 768px) {
+  .container-wide { padding-inline: 2.5rem; }
+}
+@media (min-width: 1024px) {
+  .container-wide { padding-inline: 4rem; }
+}
+
+/* Section padding */
+.section-padding {
+  padding-block: clamp(5rem, 12vw, 10rem);
+}
+.section-padding-sm {
+  padding-block: clamp(3rem, 8vw, 6rem);
+}
+
+/* Editorial divider */
+.editorial-divider {
+  width: 4rem;
+  height: 1px;
+  background-color: color-mix(in srgb, var(--color-terracotta) 60%, transparent);
+}
+
+/* Image overlays */
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--color-charcoal-900) 80%, transparent) 0%,
+    color-mix(in srgb, var(--color-charcoal-900) 30%, transparent) 50%,
+    transparent 100%
+  );
+}
+
+/* Typography scale */
+.text-display-xl {
+  font-size: clamp(3rem, 8vw, 7rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.text-display-lg {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.text-display-md {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.text-display-sm {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.text-body-lg {
+  font-size: 1.25rem;
+  line-height: 1.7;
+}
+.text-body-md {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+.text-body-sm {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+.text-caption {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  letter-spacing: 0.05em;
+}
+
+/* Link underline hover effect */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--color-terracotta);
+  transition: width 0.5s ease;
+}
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Scrollbar hide */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

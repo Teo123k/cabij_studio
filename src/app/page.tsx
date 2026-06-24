@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,7 +20,20 @@ const HERO_IMAGES = [
 ];
 
 export default function Home() {
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [openProcessIndex, setOpenProcessIndex] = useState<number>(0);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    if (prefersReducedMotion.matches) return;
+
+    const timer = window.setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % HERO_IMAGES.length);
+    }, 9000);
+
+    return () => window.clearInterval(timer);
+  }, []);
 
   const featuredWork = portfolioProjects.filter((p) => p.featured);
 
@@ -30,15 +43,24 @@ export default function Home() {
       <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-charcoal-950">
         {/* Background Image Carousel */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute inset-0 opacity-40">
-            <Image
-              src={HERO_IMAGES[0].src}
-              alt={HERO_IMAGES[0].alt}
-              fill
-              priority
-              className="object-cover"
-            />
-          </div>
+          {HERO_IMAGES.map((image, index) => (
+            <motion.div
+              key={image.src}
+              initial={false}
+              animate={{ opacity: currentHeroIndex === index ? 0.4 : 0 }}
+              transition={{ duration: 1.8, ease: "easeInOut" }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                priority={index === 0}
+                sizes="100vw"
+                className="object-cover"
+              />
+            </motion.div>
+          ))}
           {/* Editorial overlay */}
           <div className="image-overlay" />
         </div>
